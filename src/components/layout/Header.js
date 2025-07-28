@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { BarChart3, CheckCircle, Circle, Settings, Moon, Sun } from 'lucide-react';
 import { statsAtom, themeAtom } from '../../atoms';
 import StatCard from '../common/StatCard';
 import Button from '../common/Button';
+import SettingsModal from './Setting';
 
 export default function Header() {
   const stats = useAtomValue(statsAtom);
   const [theme, setTheme] = useAtom(themeAtom);
-  
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
   
   return (
+    <>
     <header className={`p-6 border-b ${
       theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
     }`}>
@@ -37,7 +40,7 @@ export default function Header() {
             variant="ghost"
             size="sm"
             icon={<Settings size={18} />}
-            onClick={() => console.log('Settings clicked')}
+            onClick={() => setIsSettingsOpen(true)}
           >
             Settings
           </Button>
@@ -83,28 +86,33 @@ export default function Header() {
       
       {/* Priority Breakdown */}
       {stats.total > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-6 text-sm">
-            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
-              Priority Breakdown:
-            </span>
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-red-500 rounded"></div>
-                High: {stats.priorityStats.high}
-              </span>
-              <span className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-                Medium: {stats.priorityStats.medium}
-              </span>
-              <span className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-green-500 rounded"></div>
-                Low: {stats.priorityStats.low}
-              </span>
-            </div>
-          </div>
+      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex items-center gap-6 text-sm">
+        <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
+          Priority Breakdown:
+        </span>
+        <div className="flex items-center gap-4">
+          <span className={`flex items-center gap-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            <div className="w-3 h-3 bg-red-500 rounded"></div>
+            High: {stats.priorityStats.high}
+          </span>
+          <span className={`flex items-center gap-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+            Medium: {stats.priorityStats.medium}
+          </span>
+          <span className={`flex items-center gap-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            <div className="w-3 h-3 bg-green-500 rounded"></div>
+            Low: {stats.priorityStats.low}
+          </span>
         </div>
+      </div>
+    </div>
       )}
+       <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </header>
+    </>
   );
 }

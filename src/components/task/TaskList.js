@@ -142,9 +142,6 @@ export default function TaskList() {
           <div
             key={task.id}
             className="animate-fadeIn"
-            style={{
-              animationDelay: `${index * 50}ms`,
-            }}
           >
             <TaskItem task={task} viewMode="list" />
           </div>
